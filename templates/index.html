@@ -10,9 +10,13 @@
   </head>
   <body>
     {% for unit in units %}
-    <h2>{{ unit.name }}</h2>
-    <a href="#" class="btn btn-lg btn-success action" data-housecode="{{ unit.housecode }}" data-unit="{{ unit.unit }}" data-action="on">on</a>
-    <a href="#" class="btn btn-lg btn-danger action" data-housecode="{{ unit.housecode }}" data-unit="{{ unit.unit }}" data-action="off">off</a>
+    <div class="row">
+      <div class="col-md-1"><b>{{ unit.name }}</b></div>
+      <div class="col-md-2">
+        <a href="#" class="btn btn-lg btn-success action" data-housecode="{{ unit.housecode }}" data-unit="{{ unit.unit }}" data-action="on">on</a>
+        <a href="#" class="btn btn-lg btn-danger action" data-housecode="{{ unit.housecode }}" data-unit="{{ unit.unit }}" data-action="off">off</a>
+      </div>
+    </div>
     {% if not loop.last %}<hr />{% endif %}
     {% endfor %}
     <script src="/vendor/jquery/dist/jquery.min.js" type="text/javascript"></script>
