@@ -11,7 +11,7 @@ app = Flask(__name__, static_url_path="")
 HOUSECODES = string.ascii_uppercase
 MAXUNIT = 16
 ACTIONS = ['on', 'off']
-chars = string.ascii_uppercase + string.digits
+chars = string.ascii_letters + string.digits
 
 
 try:
@@ -27,7 +27,7 @@ else:
     app.secret_key = config["secret"]
     try:
         with open('x10web.conf', "w") as saveconfig:
-            json.dump(saveconfig, config, indent=4, separators=(',', ': '))
+            json.dump(config, saveconfig, indent=4, separators=(',', ': '))
     except IOError:
         app.logger.warning("Failed to save config file.")
 
