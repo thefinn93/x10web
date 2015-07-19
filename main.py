@@ -24,7 +24,8 @@ def on(housecode, unit, action):
         raise Exception("Invalid unit!")
     if action not in ACTIONS:
         raise Exception("Invalid action!")
-    return heyu(action, "%s%0.d" % (housecode, unit))
+    heyu(action, "%s%0.d" % (housecode, unit))
+    return "ok"
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
