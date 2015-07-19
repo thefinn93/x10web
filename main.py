@@ -27,4 +27,4 @@ def on(housecode, unit, action):
     return heyu(action, "%s%0.d" % (housecode, unit))
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True, host='0.0.0.0')
