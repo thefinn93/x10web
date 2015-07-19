@@ -81,4 +81,8 @@ app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0')
+    debug = "debug" in config and config['debug']
+    host = "127.0.0.1"
+    if "host" in config:
+        host = config['host']
+    app.run(debug=debug, host=host)
