@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-from flask import Flask, request, session, abort, render_template
+from flask import Flask, request, session, abort, render_template, Response
+from functools import wraps
 import random
 import string
 import json
@@ -24,17 +25,50 @@ except IOError:
 app.jinja_env.globals['units'] = config['units']
 
 
+def check_auth(username, password):
+    if "auth" in config:
+        if username in config['auth']:
+            return config['auth'][username] == password
+        else:
+            return False
+    else:
+        return True
+
+
+def authenticate():
+    return Response(
+        'Could not verify your access level for that URL.\n'
+        'You have to login with proper credentials', 401,
+        {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if "auth"in config:
+            if not auth or not check_auth(auth.username, auth.password):
+                return authenticate()
+            else:
+                return f(*args, **kwargs)
+        return f(*args, **kwargs)
+    return decorated
+
+
 @app.route("/")
+@requires_auth
 def index():
     return render_template('index.html')
 
 
 @app.route("/api/token")
+@requires_auth
 def getToken():
     return generate_csrf_token()
 
 
 @app.route("/api/action", methods=["POST"])
+@requires_auth
 def takeAction():
     if "housecode" not in request.form:
         raise Exception("No housecode specified!")
