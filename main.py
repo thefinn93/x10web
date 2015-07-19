@@ -5,7 +5,7 @@ import random
 import string
 import json
 import sys
-from sh import heyu
+from sh import heyu, git
 app = Flask(__name__, static_url_path="")
 
 HOUSECODES = string.ascii_uppercase
@@ -65,6 +65,12 @@ def index():
 @requires_auth
 def getToken():
     return generate_csrf_token()
+
+
+@app.route("/update")
+def update():
+    git("pull")
+    return "kthx"
 
 
 @app.route("/api/action", methods=["POST"])
