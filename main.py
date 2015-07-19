@@ -2,6 +2,8 @@
 from flask import Flask, request, session, abort, render_template
 import random
 import string
+import json
+import sys
 from sh import heyu
 app = Flask(__name__, static_url_path="")
 
@@ -11,6 +13,15 @@ ACTIONS = ['on', 'off', 'bright', 'bright', 'dim', 'dimb']
 chars = string.ascii_uppercase + string.digits
 
 app.secret_key = ''.join(random.SystemRandom().choice(chars) for _ in range(30))
+
+
+try:
+    config = json.load(open('x10web.conf'))
+except IOError:
+    sys.stderr.write("Looks like x10web.conf doesn't exit! Check out x10web.example.conf for ideas")
+    sys.exit(1)
+
+app.jinja_env.globals['units'] = config['units']
 
 
 @app.route("/")
