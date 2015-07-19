@@ -1,0 +1,30 @@
+#!/usr/bin/env python3
+from flask import Flask
+import string
+from sh import heyu
+app = Flask(__name__)
+
+HOUSECODES = string.ascii_uppercase
+MAXUNIT = 16
+ACTIONS = ['on', 'off']
+
+
+@app.route("/")
+def hello():
+    return "Hello World!"
+
+
+@app.route("/api/<housecode>/<int:unit>/<action>")
+def on(housecode, unit, action):
+    housecode = housecode.upper()
+    action = action.lower()
+    if housecode not in HOUSECODES:
+        raise Exception("Invalid house code!")
+    if unit < 0 or unit > MAXUNIT:
+        raise Exception("Invalid unit!")
+    if action not in ACTIONS:
+        raise Exception("Invalid action!")
+    return heyu(action, "%s%0.d" % (housecode, unit))
+
+if __name__ == "__main__":
+    app.run()
