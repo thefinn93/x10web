@@ -5,7 +5,15 @@ You need to download [Heyu](http://heyu.tanj.com/), install it, and configure it
 
 After you've done that, setting up x10web is pretty easy:
 ```bash
-# Install requirements
+# Install build requirements (bower)
+sudo apt-get install npm
+
+npm install bower
+
+# Install vendor stuff (bootstrap, jquery)
+bower install
+
+# Install python requirements
 pip install -r requirements.txt
 
 # Copy the default config
