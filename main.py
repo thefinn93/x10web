@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 HOUSECODES = string.ascii_uppercase
 MAXUNIT = 16
-ACTIONS = ['on', 'off']
+ACTIONS = ['on', 'off', 'bright', 'bright', 'dim', 'dimb']
 
 
 @app.route("/")
