@@ -1,0 +1,20 @@
+{
+  "name": "x10web",
+  "version": "0.0.0",
+  "authors": [
+    "Finn <finn@finn.io>"
+  ],
+  "description": "A shitty web UI for heyu",
+  "license": "GLPv3",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "static/vendor/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5"
+  }
+}

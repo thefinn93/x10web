@@ -2,7 +2,7 @@
 from flask import Flask
 import string
 from sh import heyu
-app = Flask(__name__)
+app = Flask(__name__, static_url_path="")
 
 HOUSECODES = string.ascii_uppercase
 MAXUNIT = 16
@@ -10,8 +10,8 @@ ACTIONS = ['on', 'off', 'bright', 'bright', 'dim', 'dimb']
 
 
 @app.route("/")
-def hello():
-    return "Hello World!"
+def index():
+    return app.send_static_file('index.html')
 
 
 @app.route("/api/<housecode>/<int:unit>/<action>")
