@@ -64,6 +64,19 @@ def requires_auth(f):
     return decorated
 
 
+def check_csrf(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if request.method == "POST":
+            token = session.get('_csrf_token')
+            if not token or token != request.form.get('token'):
+                abort(403)
+            else:
+                return f(*args, **kwargs)
+        return f(*args, **kwargs)
+    return decorated
+
+
 @app.route("/")
 @requires_auth
 def index():
@@ -84,6 +97,7 @@ def update():
 
 @app.route("/api/action", methods=["POST"])
 @requires_auth
+@check_csrf
 def takeAction():
     if "housecode" not in request.form:
         raise Exception("No housecode specified!")
@@ -105,14 +119,6 @@ def takeAction():
 
     heyu(action, "%s%0.d" % (housecode, unit))
     return "ok"
-
-
-@app.before_request
-def csrf_protect():
-    if request.method == "POST":
-        token = session.get('_csrf_token')
-        if not token or token != request.form.get('token'):
-            abort(403)
 
 
 @app.errorhandler(403)
