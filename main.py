@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-from flask import Flask
+from flask import Flask, request, session, abort, render_template
+import random
 import string
 from sh import heyu
 app = Flask(__name__, static_url_path="")
@@ -7,25 +8,62 @@ app = Flask(__name__, static_url_path="")
 HOUSECODES = string.ascii_uppercase
 MAXUNIT = 16
 ACTIONS = ['on', 'off', 'bright', 'bright', 'dim', 'dimb']
+chars = string.ascii_uppercase + string.digits
+
+app.secret_key = ''.join(random.SystemRandom().choice(chars) for _ in range(30))
 
 
 @app.route("/")
 def index():
-    return app.send_static_file('index.html')
+    return render_template('index.html')
 
 
-@app.route("/api/<housecode>/<int:unit>/<action>")
-def on(housecode, unit, action):
-    housecode = housecode.upper()
-    action = action.lower()
+@app.route("/api/token")
+def getToken():
+    return generate_csrf_token()
+
+
+@app.route("/api/action", methods=["POST"])
+def takeAction():
+    if "housecode" not in request.form:
+        raise Exception("No housecode specified!")
+    housecode = request.form["housecode"].upper()
     if housecode not in HOUSECODES:
         raise Exception("Invalid house code!")
-    if unit < 0 or unit > MAXUNIT:
-        raise Exception("Invalid unit!")
+
+    if "action" not in request.form:
+        raise Exception("No action specified!")
+    action = request.form["action"].lower()
     if action not in ACTIONS:
         raise Exception("Invalid action!")
+
+    if "unit" not in request.form:
+        raise Exception("No unit specified!")
+    unit = int(request.form["unit"])
+    if unit < 0 or unit > MAXUNIT:
+        raise Exception("Invalid unit!")
+
     heyu(action, "%s%0.d" % (housecode, unit))
     return "ok"
+
+
+@app.before_request
+def csrf_protect():
+    if request.method == "POST":
+        token = session.pop('_csrf_token', None)
+        if not token or token != request.form.get('token'):
+            app.logger.debug("Token is %s but we got %s", token, request.headers.get('X-Csrf-Token'))
+            abort(403)
+
+
+def generate_csrf_token():
+    if '_csrf_token' not in session:
+        app.logger.debug("Creating a CSRF token...")
+        session['_csrf_token'] = ''.join(random.SystemRandom().choice(chars) for _ in range(30))
+    return session['_csrf_token']
+
+app.jinja_env.globals['csrf_token'] = generate_csrf_token
+
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')

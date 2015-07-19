@@ -1,11 +1,15 @@
+var API = "/api/action";
+
 $(".action").on('click', function(e) {
   target = $(e.currentTarget);
   target.addClass("disabled");
-  var url = "/api/";
-  url += target.data('housecode') + "/";
-  url += target.data('unit') + "/";
-  url += target.data('action');
-  $.get(url, function() {
+  var data = {
+    housecode: target.data('housecode'),
+    unit: target.data('unit'),
+    action: target.data('action'),
+    token: getToken()
+  };
+  $.post(API, data, function(token) {
     target.removeClass("disabled");
   });
 });
