@@ -13,14 +13,23 @@ MAXUNIT = 16
 ACTIONS = ['on', 'off']
 chars = string.ascii_uppercase + string.digits
 
-app.secret_key = ''.join(random.SystemRandom().choice(chars) for _ in range(30))
-
 
 try:
     config = json.load(open('x10web.conf'))
 except IOError:
     sys.stderr.write("Looks like x10web.conf doesn't exit! Check out x10web.example.conf for ideas")
     sys.exit(1)
+
+if("secret" in config):
+    app.secret = config["secret"]
+else:
+    config["secret"] = ''.join(random.SystemRandom().choice(chars) for _ in range(30))
+    app.secret_key = config["secret"]
+    try:
+        with open('x10web.conf', "w") as saveconfig:
+            json.dump(saveconfig, config, indent=4, separators=(',', ': '))
+    except IOError:
+        app.logger.warning("Failed to save config file.")
 
 app.jinja_env.globals['units'] = config['units']
 
