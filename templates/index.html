@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
-    <h1>Light Controls</h1><br />
     {% for unit in units %}
     <h2>{{ unit.name }}</h2>
     <a href="#" class="btn btn-lg btn-success action" data-housecode="{{ unit.housecode }}" data-unit="{{ unit.unit }}" data-action="on">on</a>
