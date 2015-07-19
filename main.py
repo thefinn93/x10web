@@ -61,9 +61,14 @@ def takeAction():
 @app.before_request
 def csrf_protect():
     if request.method == "POST":
-        token = session.pop('_csrf_token', None)
+        token = session.get('_csrf_token')
         if not token or token != request.form.get('token'):
             abort(403)
+
+
+@app.errorhandler(403)
+def unauthorized(e):
+    return session.get('_csrf_token')
 
 
 def generate_csrf_token():
