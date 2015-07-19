@@ -52,7 +52,6 @@ def csrf_protect():
     if request.method == "POST":
         token = session.pop('_csrf_token', None)
         if not token or token != request.form.get('token'):
-            app.logger.debug("Token is %s but we got %s", token, request.headers.get('X-Csrf-Token'))
             abort(403)
 
 
