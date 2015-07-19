@@ -10,7 +10,7 @@ app = Flask(__name__, static_url_path="")
 
 HOUSECODES = string.ascii_uppercase
 MAXUNIT = 16
-ACTIONS = ['on', 'off', 'bright', 'bright', 'dim', 'dimb']
+ACTIONS = ['on', 'off']
 chars = string.ascii_uppercase + string.digits
 
 app.secret_key = ''.join(random.SystemRandom().choice(chars) for _ in range(30))
