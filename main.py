@@ -67,7 +67,7 @@ def getToken():
     return generate_csrf_token()
 
 
-@app.route("/update")
+@app.route("/update", methods=["GET", "POST"])
 def update():
     git("pull")
     return "kthx"
