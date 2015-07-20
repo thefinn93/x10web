@@ -1,6 +1,8 @@
 # x10web
 *A simple web UI for controlling things via X10 via heyu*
 
+## Setup/Usage
+
 You need to download [Heyu](http://heyu.tanj.com/), install it, and configure it to work as the user you will run x10web as.
 
 After you've done that, setting up x10web is pretty easy:
@@ -26,5 +28,7 @@ editor x10web.conf
 python main.py
 ```
 
+## Screenshots
+![Screenshot](screenshot.png)
 
 Pull requests welcome.
