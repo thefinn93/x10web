@@ -20,11 +20,13 @@ except IOError:
     sys.stderr.write("Looks like x10web.conf doesn't exit! Check out x10web.example.conf for ideas")
     sys.exit(1)
 
-if("secret" in config):
+if "secret" in config:
     app.secret = config["secret"]
+    app.logger.debug("Using secret from config")
 else:
     config["secret"] = ''.join(random.SystemRandom().choice(chars) for _ in range(30))
     app.secret_key = config["secret"]
+    app.logger.debug("Generating new secret and attempting to save in config...")
     try:
         with open('x10web.conf', "w") as saveconfig:
             json.dump(config, saveconfig, indent=4, separators=(',', ': '))
