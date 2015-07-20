@@ -21,7 +21,7 @@ except IOError:
     sys.exit(1)
 
 if "secret" in config:
-    app.secret = config["secret"]
+    app.secret_key = config["secret"]
     app.logger.debug("Using secret from config")
 else:
     config["secret"] = ''.join(random.SystemRandom().choice(chars) for _ in range(30))
